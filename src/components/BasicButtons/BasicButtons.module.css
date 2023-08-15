@@ -1,4 +1,16 @@
-.btn {
+.wrapper {
     padding-top: 30px;
 
+}
+
+.btn {
+    background: #000000c7;
+    color: white;
+    font-size: 15px;
+    font-family: 'Roboto Slab', sans-serif;
+    text-transform: none;
+
+    &:hover {
+        background-color: rgba(153, 205, 50, 0.773) !important;
+    }
 }

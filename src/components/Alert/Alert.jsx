@@ -1,6 +1,13 @@
+import PropTypes from 'prop-types';
 const { Snackbar, Alert } = require('@mui/material');
 
-export const AlertContacts = ({ success, error, handleClose }) => {
+const AlertContacts = ({
+  success,
+  error,
+  handleClose,
+  successText = 'Add contact success.',
+  errorText = 'Such contact already exists.',
+}) => {
   return (
     <>
       <Snackbar
@@ -10,7 +17,7 @@ export const AlertContacts = ({ success, error, handleClose }) => {
         autoHideDuration={3000}
       >
         <Alert onClose={handleClose} severity="error">
-          Such contact already exists.
+          {errorText}
         </Alert>
       </Snackbar>
 
@@ -21,9 +28,19 @@ export const AlertContacts = ({ success, error, handleClose }) => {
         autoHideDuration={3000}
       >
         <Alert onClose={handleClose} severity="success">
-          Add contact success.
+          {successText}
         </Alert>
       </Snackbar>
     </>
   );
 };
+
+AlertContacts.propTypes = {
+  success: PropTypes.bool,
+  error: PropTypes.bool,
+  handleClose: PropTypes.func,
+  successText: PropTypes.string,
+  errorText: PropTypes.string,
+};
+
+export default AlertContacts;

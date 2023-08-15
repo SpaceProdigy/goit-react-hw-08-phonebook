@@ -1,19 +1,23 @@
 import Box from '@mui/material/Box';
+import { createPortal } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { string, object } from 'yup';
 import TextField from '@mui/material/TextField';
 import PersonIcon from '@mui/icons-material/Person';
 import BasicButtons from 'components/BasicButtons/BasicButtons';
-import SmartphoneIcon from '@mui/icons-material/Smartphone';
-import css from './ContactForm.module.css';
+import css from '../../components/ContactForm/ContactForm.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-
+import cssRegister from './Register.module.css';
 import AlertContacts from 'components/Alert/Alert';
 import { useState } from 'react';
-import { getContacts } from 'redux/contactsSlice';
-import { addContact } from 'redux/operations';
-import { selectUserLoading } from 'redux/authSlice';
+import { registerUserThunk } from 'redux/operations';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import LockIcon from '@mui/icons-material/Lock';
+import { selectAuthentificated, selectUserLoading } from 'redux/authSlice';
+import { Navigate } from 'react-router-dom';
+
+const alertPortal = document.getElementById('alert');
 
 const schema = object({
   name: string()
@@ -23,19 +27,23 @@ const schema = object({
       /^[a-zA-Zа-яА-ЯґҐєЄіІїЇ]+(([' \\-][a-zA-Zа-яА-ЯґҐєЄіІїЇ ])?[a-zA-Zа-яА-ЯґҐєЄіІїЇ]*)*$/,
       'Invalid name format'
     ),
-
-  number: string()
+  email: string()
     .required('Required*')
-    .max(20, 'Too Long! Max 15')
+    .email('Invalid email format')
+    .max(30, 'Too Long! Max 30'),
+  password: string()
+    .required('Required*')
+    .min(8, 'Password must be at least 8 characters long')
     .matches(
-      /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
-      'Invalid phone number format'
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]*$/,
+      'Password must contain at least one uppercase letter, one lowercase letter, and one digit'
     ),
 });
 
-export default function ContactForm() {
+export default function Register() {
   const buttonIsDisable = useSelector(selectUserLoading);
-  const contacts = useSelector(getContacts);
+  const authenticated = useSelector(selectAuthentificated);
+
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [alertError, setAlertError] = useState(false);
   const dispatch = useDispatch();
@@ -53,18 +61,20 @@ export default function ContactForm() {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const onSubmit = data => {
-    if (contacts.some(contact => contact.name === data.name)) {
-      return setAlertError(true);
-    }
-    console.log(data);
-    dispatch(addContact(data));
+  const onSubmit = async data => {
+    const { type } = await dispatch(registerUserThunk(data));
     reset();
-    setAlertSuccess(true);
+    if (type === 'auth/register/rejected') {
+      setAlertError(true);
+    }
+    if (type === 'auth/register/fulfilled') {
+      setAlertSuccess(true);
+    }
   };
 
+  if (authenticated) return <Navigate to="/contacts" />;
   return (
-    <>
+    <section className={cssRegister.register}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           className={css.wrapper}
@@ -90,29 +100,43 @@ export default function ContactForm() {
             />
           </Box>
           <Box className={css.box}>
-            <SmartphoneIcon className={css.icon} />
+            <AlternateEmailIcon className={css.icon} />
             <TextField
-              {...register('number')}
-              helperText={errors.number?.message}
-              type="tel"
-              title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-              label="Number"
+              {...register('email')}
+              helperText={errors.email?.message}
+              type="email"
+              label="Email"
+              title="Email should be in the format example@example.com"
               variant="standard"
               autoComplete="none"
             />
           </Box>
-          <BasicButtons
-            text="Add contact"
-            disabled={Boolean(buttonIsDisable)}
-          />
+          <Box className={css.box}>
+            <LockIcon className={css.icon} />
+            <TextField
+              {...register('password')}
+              helperText={errors.password?.message}
+              type="password"
+              title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+              label="Password"
+              variant="standard"
+              autoComplete="none"
+            />
+          </Box>
+          <BasicButtons text="Sing up" disabled={Boolean(buttonIsDisable)} />
         </Box>
       </form>
 
-      <AlertContacts
-        success={alertSuccess}
-        error={alertError}
-        handleClose={handleClose}
-      />
-    </>
+      {createPortal(
+        <AlertContacts
+          success={alertSuccess}
+          successText={'New user successfully'}
+          errorText={'Such user already exists'}
+          error={alertError}
+          handleClose={handleClose}
+        />,
+        alertPortal
+      )}
+    </section>
   );
 }

@@ -1,17 +1,25 @@
 .wrapper {
     width: 300px;
     display: flex;
+    padding: 0;
+    align-items: flex-end;
+    justify-content: space-between;
 
-    align-items: center;
-    justify-content: space-between
+
+
 }
 
 .box {
     display: flex;
+    align-items: center;
 }
 
 .btn:hover {
     color: rgb(231, 52, 52);
+}
+
+.btnEdit:hover {
+    color: yellow;
 }
 
 .icon {
@@ -19,4 +27,23 @@
     margin: 5px;
 
 
+}
+
+.btnBox {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.inputEdit {
+    width: 150px;
+}
+
+.btnEditSubmit:hover {
+    color: green;
+}
+
+.btnWrapper {
+    display: flex;
+    align-items: flex-start;
 }

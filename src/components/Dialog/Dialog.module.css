@@ -1,0 +1,31 @@
+.btn {
+    color: white;
+    font-size: 10px;
+    font-family: 'Roboto Slab, sans-serif';
+    text-transform: 'none';
+
+    &:hover {
+        color: rgba(250, 217, 69, 0.7);
+    }
+}
+
+.btnClose {
+    color: white;
+    font-family: 'Roboto Slab, sans-serif';
+    text-transform: capitalize;
+    background-color: rgba(0, 0, 0, 0.7);
+
+    &:hover {
+        background-color: rgba(250, 217, 69, 0.7);
+    }
+}
+
+.text {
+    font-family: 'Roboto Slab, sans-serif';
+    font-size: 16px;
+}
+
+.title {
+    font-family: 'Roboto Slab, sans-serif';
+    font-size: 22px;
+}

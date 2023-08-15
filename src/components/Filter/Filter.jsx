@@ -2,9 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
 import TextField from '@mui/material/TextField';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import SearchIcon from '@mui/icons-material/Search';
 import { setFilter } from 'redux/filterSlice';
-import { getFilter } from 'redux/selectors';
+import { getFilter } from 'redux/contactsSlice';
 
 export default function Filter() {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ export default function Filter() {
     <>
       <Box sx={{ '& > :not(style)': { m: 1 } }}>
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-          <PersonSearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+          <SearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
           <TextField
             onChange={handleFilter}
             type="text"
