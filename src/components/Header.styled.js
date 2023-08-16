@@ -67,6 +67,7 @@ export const Img = styled.img`
 
 export const LogOut = styled.button`
   display: flex;
+  gap: 5px;
   align-items: center;
   padding: 8px 16px;
   border-radius: 4px;
@@ -79,10 +80,6 @@ export const LogOut = styled.button`
 
   &:hover {
     background-color: rgba(250, 217, 69, 0.7);
-  }
-
-  @media screen and (min-width: 768px) {
-    display: block;
   }
 `;
 

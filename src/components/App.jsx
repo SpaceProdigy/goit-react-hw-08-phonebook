@@ -26,6 +26,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { logOutUserThunk, refreshUserThunk } from 'redux/operations';
 import AccountMenu from './IconMenu/IconMenu';
+import PrivateRoute from './PrivateRoute/PrivateRoute';
 
 const Home = lazy(() => import('../pages/Home/Home'));
 const Login = lazy(() => import('../pages/Login/Login'));
@@ -78,7 +79,9 @@ export const App = () => {
             </>
           ) : (
             <>
-              <WrapperEmail>{userEmail.email}</WrapperEmail>
+              <WrapperEmail>
+                <p aria-label="User email">{userEmail.email}</p>
+              </WrapperEmail>
               <LogOut onClick={handleLogOut}>
                 <LogoutIcon />
                 Log Out
@@ -95,7 +98,15 @@ export const App = () => {
             <Route path="/" element={<Home />}>
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/contacts" element={<Contacts />} />
+              <Route
+                path="/contacts"
+                element={
+                  <PrivateRoute redirectTo="/login">
+                    <Contacts />
+                  </PrivateRoute>
+                }
+              />
+
               <Route path="*" element={<Navigate to="/" />} />
             </Route>
           </Routes>
